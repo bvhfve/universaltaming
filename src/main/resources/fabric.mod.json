@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"id": "universaltaming",
+	"version": "${version}",
+	"name": "Universal Taming",
+	"description": "A comprehensive mod that allows players to tame nearly any mob in Minecraft, transforming them into loyal custom pet entities with enhanced behaviors and abilities.",
+	"authors": [
+		"bvhfve"
+	],
+	"contact": {
+		"homepage": "https://github.com/bvhfve/universaltaming",
+		"sources": "https://github.com/bvhfve/universaltaming"
+	},
+	"license": "MIT",
+	"icon": "assets/universaltaming/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.bvhfve.universaltaming.Universaltaming"
+		],
+		"client": [
+			"com.bvhfve.universaltaming.client.UniversaltamingClient"
+		]
+	},
+	"mixins": [
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.21.7",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"modmenu": "*"
+	}
+}

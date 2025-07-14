@@ -1,0 +1,26 @@
+{
+  "item.universaltaming.taming_treat": "Taming Treat",
+  "itemgroup.universaltaming.universal_taming": "Universal Taming",
+  
+  "entity.universaltaming.tamed_generic": "Tamed Pet",
+  "entity.universaltaming.tamed_creeper": "Tamed Creeper",
+  
+  "message.universaltaming.not_enough_items": "You need %d taming treats to tame this mob",
+  "message.universaltaming.taming_success": "Successfully tamed!",
+  "message.universaltaming.taming_failed": "Taming failed",
+  "message.universaltaming.cannot_tame": "This mob cannot be tamed",
+  "message.universaltaming.already_tamed": "This mob is already tamed",
+  
+  "tooltip.universaltaming.taming_treat": "Right-click on a mob to attempt taming",
+  "tooltip.universaltaming.golden_sword": "Use on tamed pets to remove them",
+  
+  "config.universaltaming.title": "Universal Taming Configuration",
+  "config.universaltaming.taming_item": "Taming Item",
+  "config.universaltaming.taming_item_count": "Taming Item Count",
+  "config.universaltaming.health_multiplier": "Health Multiplier",
+  "config.universaltaming.follow_distance": "Follow Distance",
+  "config.universaltaming.teleport_distance": "Teleport Distance",
+  "config.universaltaming.hostile_attack_range": "Hostile Attack Range",
+  "config.universaltaming.creeper_neutralization_range": "Creeper Neutralization Range",
+  "config.universaltaming.passive_drop_interval": "Passive Drop Interval (minutes)"
+}

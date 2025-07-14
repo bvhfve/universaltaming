@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "BMB",
+    " B "
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:bone"
+    },
+    "M": {
+      "item": "minecraft:cooked_beef"
+    }
+  },
+  "result": {
+    "item": "universaltaming:taming_treat",
+    "count": 4
+  }
+}
