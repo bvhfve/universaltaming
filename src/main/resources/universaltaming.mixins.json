@@ -3,6 +3,8 @@
   "package": "com.bvhfve.universaltaming.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "MobEntityMixin",
+    "LivingEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
