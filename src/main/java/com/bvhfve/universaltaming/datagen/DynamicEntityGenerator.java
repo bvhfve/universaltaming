@@ -1,7 +1,13 @@
 package com.bvhfve.universaltaming.datagen;
 
 import com.bvhfve.universaltaming.Universaltaming;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -78,14 +84,18 @@ public class DynamicEntityGenerator {
         String mobName = vanillaId.getPath();
         Identifier tamedId = Universaltaming.id("tamed_" + mobName);
         
-        // Get dimensions from vanilla entity
-        EntityDimensions dimensions = vanillaType.getDimensions();
+        // Check if the entity type is already registered
+        if (Registries.ENTITY_TYPE.containsId(tamedId)) {
+            Universaltaming.LOGGER.debug("Tamed entity type already registered: {}", tamedId);
+            TAMED_ENTITY_TYPES.put(vanillaMobId, Registries.ENTITY_TYPE.get(tamedId));
+            return;
+        }
         
         // Create the tamed entity type using TamedGenericEntity
         EntityType<com.bvhfve.universaltaming.entity.TamedGenericEntity> tamedEntityType = 
             FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, 
                 com.bvhfve.universaltaming.entity.TamedGenericEntity::new)
-                .dimensions(dimensions)
+                .dimensions(vanillaType.getDimensions())
                 .trackRangeBlocks(80)
                 .trackedUpdateRate(3)
                 .build(net.minecraft.registry.RegistryKey.of(
@@ -93,6 +103,13 @@ public class DynamicEntityGenerator {
         
         // Register the entity type
         Registry.register(Registries.ENTITY_TYPE, tamedId, tamedEntityType);
+        
+        // Register default attributes for the tamed entity
+        DefaultAttributeContainer.Builder attributeBuilder = MobEntity.createMobAttributes();
+        // You might want to copy attributes from the vanilla mob, e.g.:
+        // DefaultAttributeContainer vanillaAttributes = FabricDefaultAttributeRegistry.get(vanillaType);
+        // if (vanillaAttributes != null) { ... }
+        FabricDefaultAttributeRegistry.register(tamedEntityType, attributeBuilder.build());
         
         // Store in our map
         TAMED_ENTITY_TYPES.put(vanillaMobId, tamedEntityType);
