@@ -142,7 +142,7 @@ Unlike other pet mods that change how entities look or behave, Universal Taming 
 
 ## Contributing
 
-We welcome contributions! Please see our [development guidelines](.agent.md) and [roadmap](ROADMAP.md) for current priorities.
+We welcome contributions! Please see our [roadmap](ROADMAP.md) for current priorities.
 
 ### Priority Areas
 - **Entity Coverage**: Adding support for more entity types
