@@ -8,6 +8,9 @@ import com.bvhfve.universaltaming.entity.ai.TamedRevengeGoal;
 import com.bvhfve.universaltaming.entity.ai.TamedAttackWithOwnerGoal;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.mob.Monster;
+import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -60,7 +63,14 @@ public class TamedGenericEntity extends TameableEntity {
     public TamedGenericEntity(EntityType<? extends TameableEntity> entityType, World world) {
         super(entityType, world);
         this.setTamed(true, false);
-        this.passiveDropInterval = UniversalTamingConfig.INSTANCE.passiveDropIntervalMinutes * 1200; // Convert minutes to ticks
+        // Handle null config gracefully
+        this.passiveDropInterval = (UniversalTamingConfig.INSTANCE != null) ? 
+            UniversalTamingConfig.INSTANCE.passiveDropIntervalMinutes * 1200 : 1200; // Default to 1 minute
+    }
+    
+    public TamedGenericEntity(EntityType<? extends TameableEntity> entityType, World world, String originalEntityType) {
+        this(entityType, world);
+        this.setOriginalEntityType(originalEntityType != null ? originalEntityType : "minecraft:pig");
     }
     
     @Override
@@ -75,25 +85,43 @@ public class TamedGenericEntity extends TameableEntity {
     
     @Override
     protected void initGoals() {
+        // Based on wolf knowledgebase examples - proper wolf-like AI implementation
+        
+        // Priority 1: Swimming (survival)
         this.goalSelector.add(1, new SwimGoal(this));
-        this.goalSelector.add(2, new TamedSitGoal(this));
-        this.goalSelector.add(3, new TamedFollowOwnerGoal(this, 1.0, 10.0f, 2.0f, false));
+        
+        // Priority 2: Sitting when commanded (critical for wolf behavior)
+        this.goalSelector.add(2, new SitGoal(this));
+        
+        // Priority 3: Follow owner when not sitting (like ModFollowOwnerGoal)
+        this.goalSelector.add(3, new FollowOwnerGoal(this, 1.0, 10.0f, 2.0f));
+        
+        // Priority 4: Wander around when not following or sitting
         this.goalSelector.add(4, new WanderAroundFarGoal(this, 1.0));
+        
+        // Priority 5: Look at players (social behavior)
         this.goalSelector.add(5, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
+        
+        // Priority 6: Look around randomly
         this.goalSelector.add(6, new LookAroundGoal(this));
         
-        // Wolf-like AI goals for defending owner and coordinated attacks
-        this.targetSelector.add(1, new TamedRevengeGoal(this));
-        this.targetSelector.add(2, new TamedAttackWithOwnerGoal(this));
-        this.targetSelector.add(3, new TamedAttackHostilesGoal(this));
+        // Combat AI - based on wolf examples
+        this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
+        this.targetSelector.add(2, new AttackWithOwnerGoal(this));
+        this.targetSelector.add(3, new RevengeGoal(this).setGroupRevenge());
+        
+        // Additional wolf-like behaviors - simplified without predicate for now
+        this.targetSelector.add(4, new ActiveTargetGoal<MobEntity>(this, MobEntity.class, 5, false, false, null));
     }
     
-    public static DefaultAttributeContainer.Builder createTamedAttributes() {
-        return MobEntity.createMobAttributes()
+    public static DefaultAttributeContainer.Builder createLivingAttributes() {
+        return TameableEntity.createMobAttributes()
             .add(EntityAttributes.MAX_HEALTH, 20.0)
             .add(EntityAttributes.MOVEMENT_SPEED, 0.25)
             .add(EntityAttributes.ATTACK_DAMAGE, 2.0)
-            .add(EntityAttributes.FOLLOW_RANGE, 16.0);
+            .add(EntityAttributes.FOLLOW_RANGE, 16.0)
+            .add(EntityAttributes.ARMOR, 0.0)
+            .add(EntityAttributes.ARMOR_TOUGHNESS, 0.0);
     }
     
     @Override
@@ -269,6 +297,8 @@ public class TamedGenericEntity extends TameableEntity {
         this.passiveDropTimer = nbt.getInt("PassiveDropTimer", 0);
         this.lastAttackTime = nbt.getInt("LastAttackTime", 0);
     }
+    
+    // Removed duplicate interactMob method - already exists in the class
     
     @Override
     public boolean isBreedingItem(ItemStack stack) {

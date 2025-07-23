@@ -16,7 +16,7 @@ public class UniversaltamingClient implements ClientModInitializer {
     public void onInitializeClient() {
         // Register renderers for the main static entity types
         EntityRendererRegistry.register(Universaltaming.TAMED_GENERIC, TamedGenericEntityRenderer::new);
-        EntityRendererRegistry.register(Universaltaming.TAMED_CREEPER, TamedCreeperEntityRenderer::new);
+        // EntityRendererRegistry.register(Universaltaming.TAMED_CREEPER, TamedCreeperEntityRenderer::new); // Removed - entity doesn't exist
         
         // Register renderers for all dynamically generated entity types
         registerDynamicEntityRenderers();
@@ -41,26 +41,26 @@ public class UniversaltamingClient implements ClientModInitializer {
                     EntityType<com.bvhfve.universaltaming.entity.TamedGenericEntity> castedType = 
                         (EntityType<com.bvhfve.universaltaming.entity.TamedGenericEntity>) tamedEntityType;
                     
-                    // Use the vanilla renderer factory directly
+                    // Use dynamic renderer that preserves perfect visual appearance
+                    // Each entity type gets its correct vanilla model and texture
                     EntityRendererRegistry.register(castedType, (context) -> {
-                        // Get the vanilla renderer for this entity type
-                        return getVanillaRenderer(vanillaEntityType, context);
+                        return com.bvhfve.universaltaming.client.render.DynamicEntityRenderer.createRenderer(vanillaMobId, context);
                     });
                     
-                    Universaltaming.LOGGER.debug("Registered vanilla renderer for tamed entity type: {} -> exact original appearance", vanillaMobId);
+                    Universaltaming.LOGGER.debug("Registered dynamic renderer for tamed entity type: {} -> perfect visual preservation", vanillaMobId);
                 } else {
                     Universaltaming.LOGGER.warn("Vanilla entity type not found for: {}", vanillaMobId);
                 }
             }
         }
         
-        Universaltaming.LOGGER.info("Registered vanilla renderers for {} entity types - perfect visual preservation", 
+        Universaltaming.LOGGER.info("Registered compatible renderers for {} entity types - texture preservation enabled", 
             tamedEntityTypes.size());
     }
     
     @SuppressWarnings("unchecked")
-    private net.minecraft.client.render.entity.EntityRenderer<com.bvhfve.universaltaming.entity.TamedGenericEntity> getVanillaRenderer(
-            EntityType<?> vanillaType, EntityRendererFactory.Context context) {
+    private net.minecraft.client.render.entity.EntityRenderer<com.bvhfve.universaltaming.entity.TamedGenericEntity, ?> getVanillaRenderer(
+            EntityType<?> vanillaType, net.minecraft.client.render.entity.EntityRendererFactory.Context context) {
         
         // Create a specialized renderer that uses the original entity's model and texture
         // but works with our TamedGenericEntity

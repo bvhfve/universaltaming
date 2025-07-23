@@ -93,8 +93,8 @@ public class DynamicEntityGenerator {
         
         // Create the tamed entity type using TamedGenericEntity
         EntityType<com.bvhfve.universaltaming.entity.TamedGenericEntity> tamedEntityType = 
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, 
-                com.bvhfve.universaltaming.entity.TamedGenericEntity::new)
+            FabricEntityTypeBuilder.<com.bvhfve.universaltaming.entity.TamedGenericEntity>create(SpawnGroup.CREATURE, 
+                (entityType, world) -> new com.bvhfve.universaltaming.entity.TamedGenericEntity(entityType, world))
                 .dimensions(vanillaType.getDimensions())
                 .trackRangeBlocks(80)
                 .trackedUpdateRate(3)
@@ -105,11 +105,8 @@ public class DynamicEntityGenerator {
         Registry.register(Registries.ENTITY_TYPE, tamedId, tamedEntityType);
         
         // Register default attributes for the tamed entity
-        DefaultAttributeContainer.Builder attributeBuilder = MobEntity.createMobAttributes();
-        // You might want to copy attributes from the vanilla mob, e.g.:
-        // DefaultAttributeContainer vanillaAttributes = FabricDefaultAttributeRegistry.get(vanillaType);
-        // if (vanillaAttributes != null) { ... }
-        FabricDefaultAttributeRegistry.register(tamedEntityType, attributeBuilder.build());
+        FabricDefaultAttributeRegistry.register(tamedEntityType, 
+            com.bvhfve.universaltaming.entity.TamedGenericEntity.createLivingAttributes());
         
         // Store in our map
         TAMED_ENTITY_TYPES.put(vanillaMobId, tamedEntityType);

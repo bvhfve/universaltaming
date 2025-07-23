@@ -1,21 +1,215 @@
-# Universal Taming Mod - Visual Enhancement Roadmap
+# Universal Taming Mod - Master Development Plan
 
-## Current Status ✅
-- **Core Functionality**: Complete - Dynamic entity generation and wolf-like AI working
-- **Taming System**: Functional - Vanilla mobs convert to tamed entities successfully
-- **AI Behavior**: Implemented - Revenge, coordinated attacks, owner defense
-- **Entity Management**: Stable - 50+ mob types supported with proper lifecycle
-- **Crash Fix**: Complete - All dynamic entity types now have proper renderers
-- **Dynamic Textures**: Implemented - Tamed entities show correct original textures
+## 🎯 REVOLUTIONARY NEW ARCHITECTURE PLAN
 
-## Core Visual Preservation Goals 🎯
+Based on deep analysis of wolf examples and current system limitations, we're implementing a **complete architectural overhaul** to create the most advanced universal taming system ever built.
 
-### Phase 1: Complete Visual Preservation System (Priority: CRITICAL) ✅
-**Goal**: Perfect preservation of original entity appearance (models + textures + animations)
-**Status**: IMPLEMENTED - Full visual preservation system completed
+### 🔥 CORE PHILOSOPHY: "Every Mob Gets Its Own Perfect Renderer"
 
-#### Implementation Details:
-- **OriginalAppearanceRenderer**: Custom renderer that uses original entity models and textures
+**Problem Solved**: Dynamic rendering cannot perfectly preserve complex entity behaviors, animations, and visual states.
+
+**Solution**: Create **unique rendering and entity classes for EVERY single mob** in the game, each with:
+- Perfect model preservation using original vanilla models
+- Perfect texture preservation using original vanilla textures  
+- Perfect animation preservation using original vanilla animation systems
+- Wolf-like AI system with full vanilla wolf data compatibility
+- Complete `/data get entity` compatibility showing all wolf-like properties
+
+## 🏗️ NEW MASTER ARCHITECTURE
+
+### Phase 1: Individual Entity System (PRIORITY: CRITICAL)
+**Goal**: Replace dynamic system with individual entity classes for each mob type
+
+#### 1.1 Entity Class Generation
+- **TamedCowEntity** extends TameableEntity with cow model/texture/animations
+- **TamedPigEntity** extends TameableEntity with pig model/texture/animations  
+- **TamedSheepEntity** extends TameableEntity with sheep model/texture/animations
+- **TamedChickenEntity** extends TameableEntity with chicken model/texture/animations
+- **TamedZombieEntity** extends TameableEntity with zombie model/texture/animations
+- **TamedSkeletonEntity** extends TameableEntity with skeleton model/texture/animations
+- **TamedCreeperEntity** extends TameableEntity with creeper model/texture/animations
+- **TamedSpiderEntity** extends TameableEntity with spider model/texture/animations
+- **TamedEndermanEntity** extends TameableEntity with enderman model/texture/animations
+- **[Continue for ALL 50+ mob types]**
+
+#### 1.2 Renderer Class Generation  
+- **TamedCowEntityRenderer** using vanilla CowEntityRenderer patterns
+- **TamedPigEntityRenderer** using vanilla PigEntityRenderer patterns
+- **TamedSheepEntityRenderer** using vanilla SheepEntityRenderer patterns
+- **TamedChickenEntityRenderer** using vanilla ChickenEntityRenderer patterns
+- **TamedZombieEntityRenderer** using vanilla ZombieEntityRenderer patterns
+- **TamedSkeletonEntityRenderer** using vanilla SkeletonEntityRenderer patterns
+- **TamedCreeperEntityRenderer** using vanilla CreeperEntityRenderer patterns
+- **TamedSpiderEntityRenderer** using vanilla SpiderEntityRenderer patterns
+- **TamedEndermanEntityRenderer** using vanilla EndermanEntityRenderer patterns
+- **[Continue for ALL 50+ mob types]**
+
+#### 1.3 Model Class Generation
+- **TamedCowEntityModel** extending vanilla CowEntityModel
+- **TamedPigEntityModel** extending vanilla PigEntityModel
+- **TamedSheepEntityModel** extending vanilla SheepEntityModel
+- **[Continue for ALL 50+ mob types]**
+
+### Phase 2: Wolf-Like AI Implementation (PRIORITY: HIGH)
+**Goal**: Every tamed entity behaves exactly like a vanilla wolf
+
+#### 2.1 Universal Wolf AI System
+Based on analysis of wolf examples (DoggyTalents, ImprovedWolves, Companions), implement:
+
+```java
+// Universal Wolf-like data structure for ALL tamed entities
+public class TamedEntityData {
+    // Core wolf properties that ALL tamed entities will have
+    private UUID owner;
+    private boolean sitting = false;
+    private int collarColor = 14; // Red by default like wolves
+    private int angerTime = 0;
+    private float health = 40.0f; // Wolf-like health
+    private float maxHealth = 40.0f;
+    private float movementSpeed = 0.3f; // Wolf-like speed
+    private float followRange = 16.0f; // Wolf-like follow range
+    
+    // Wolf-like brain/memory system
+    private Brain<TamedEntity> brain;
+    private Map<String, Object> memories = new HashMap<>();
+    
+    // Wolf-like attributes that show in /data get entity
+    private boolean persistenceRequired = false;
+    private boolean invulnerable = false;
+    private boolean fallFlying = false;
+    private int forcedAge = 0;
+    private int deathTime = 0;
+    private boolean leftHanded = false;
+    private boolean canPickUpLoot = false;
+    private List<AttributeModifier> attributes = new ArrayList<>();
+}
+```
+
+#### 2.2 Wolf-Compatible Data Output
+When using `/data get entity` on ANY tamed mob, it should show:
+```
+Wolf has the following entity data: {
+    Brain: {memories: {}}, 
+    HurtByTimestamp: 0, 
+    Owner: [I; -798559876, -823380661, -1815467092, 1532164499], 
+    Sitting: 1b, 
+    Invulnerable: 0b, 
+    FallFlying: 0b, 
+    ForcedAge: 0, 
+    PortalCooldown: 0, 
+    AbsorptionAmount: 0.0f, 
+    InLove: 0, 
+    DeathTime: 0s, 
+    PersistenceRequired: 0b, 
+    UUID: [I; 1774636305, 36717396, -1692411697, -402704169], 
+    Age: 0, 
+    CollarColor: 14b, 
+    AngerTime: 0, 
+    Motion: [0.0d, -0.0784000015258789d, 0.0d], 
+    Health: 40.0f, 
+    LeftHanded: 0b, 
+    fall_distance: 0.0d, 
+    Air: 300s, 
+    OnGround: 1b, 
+    Rotation: [0.0f, 0.0f], 
+    Pos: [-9.655578847900273d, 109.0d, -32.013277301114876d], 
+    Fire: 0s, 
+    CanPickUpLoot: 0b, 
+    attributes: [
+        {id: "minecraft:max_health", base: 40.0d}, 
+        {id: "minecraft:movement_speed", base: 0.30000001192092896d}, 
+        {id: "minecraft:follow_range", modifiers: [{amount: 0.018497530560997278d, id: "minecraft:random_spawn_bonus", operation: "add_multiplied_base"}], base: 16.0d}
+    ], 
+    HurtTime: 0s
+}
+```
+
+### Phase 3: Dynamic Wolf Model Removal (PRIORITY: MEDIUM)
+**Goal**: Remove the old dynamic system completely
+
+#### 3.1 Cleanup Tasks
+- Remove `OriginalAppearanceRenderer.java`
+- Remove `DynamicEntityRenderer.java` 
+- Remove `TamedGenericEntity.java` (replace with individual entities)
+- Remove dynamic texture mapping system
+- Remove dynamic model system
+
+#### 3.2 Migration System
+- Convert existing tamed entities to new individual entity types
+- Preserve all existing tamed entity data during migration
+- Ensure no data loss during the transition
+
+### Phase 4: Advanced Wolf AI Features (PRIORITY: LOW)
+**Goal**: Implement advanced wolf-like behaviors from knowledgebase examples
+
+#### 4.1 Enhanced Behaviors (from DoggyTalents analysis)
+- **Sitting/Standing**: Right-click to toggle like vanilla wolves
+- **Following**: Smart following with teleportation when too far
+- **Combat**: Attack hostiles, defend owner, coordinated pack attacks
+- **Loyalty**: Never despawn, always return to owner
+- **Health**: Wolf-like health system with regeneration
+
+#### 4.2 Advanced Features (from ImprovedWolves analysis)  
+- **Gift System**: Tamed entities occasionally bring gifts to owner
+- **Stat Tracking**: Kill count, death count, experience gained
+- **Classes**: Hunter/Gatherer specializations
+- **Breeding**: Tamed entities can breed with each other
+
+## 🛠️ IMPLEMENTATION STRATEGY
+
+### Step 1: Entity Class Generation (Week 1-2)
+1. Create template entity class based on wolf examples
+2. Generate individual entity classes for all 50+ mob types
+3. Implement wolf-like AI goals for each entity type
+4. Add proper NBT data serialization for wolf compatibility
+
+### Step 2: Renderer System (Week 3-4)  
+1. Create template renderer class based on vanilla patterns
+2. Generate individual renderer classes for all 50+ mob types
+3. Ensure perfect model/texture preservation
+4. Test rendering performance and visual accuracy
+
+### Step 3: Model Integration (Week 5-6)
+1. Create template model class extending vanilla models
+2. Generate individual model classes for all 50+ mob types  
+3. Preserve all original animations and visual states
+4. Test model accuracy and animation fidelity
+
+### Step 4: Wolf AI Implementation (Week 7-8)
+1. Implement universal wolf-like data structure
+2. Add wolf-compatible NBT serialization
+3. Implement wolf-like AI goals and behaviors
+4. Test `/data get entity` compatibility
+
+### Step 5: Testing & Polish (Week 9-10)
+1. Comprehensive testing of all entity types
+2. Performance optimization
+3. Bug fixes and edge case handling
+4. Documentation and user guides
+
+## 📊 SUCCESS METRICS
+
+### Technical Metrics
+- ✅ 50+ individual entity classes with perfect visual preservation
+- ✅ 50+ individual renderer classes using vanilla patterns  
+- ✅ 50+ individual model classes extending vanilla models
+- ✅ 100% wolf-like AI compatibility for all tamed entities
+- ✅ 100% `/data get entity` compatibility showing wolf data
+- ✅ Zero dynamic rendering (all static, type-safe)
+- ✅ Zero visual differences from vanilla entities
+
+### User Experience Metrics  
+- ✅ Seamless taming experience (no visual changes)
+- ✅ Perfect wolf-like behavior for all tamed mobs
+- ✅ Complete data compatibility with vanilla wolf systems
+- ✅ Professional-quality mod experience
+- ✅ Zero crashes or performance issues
+
+## 🎯 FINAL VISION
+
+**The Ultimate Universal Taming Mod**: Every single mob in Minecraft can be tamed and will behave exactly like a vanilla wolf, while looking exactly like their original vanilla appearance. No compromises, no limitations, just perfect universal taming with perfect visual preservation.
+
+This represents the most ambitious and technically advanced universal taming system ever attempted in Minecraft modding.
 - **Perfect Visual Preservation**: Tamed entities look exactly like their original counterparts
 - **Model Accuracy**: Each entity type uses its correct model (cow model, pig model, etc.)
 - **Texture Accuracy**: Each entity type uses its correct texture

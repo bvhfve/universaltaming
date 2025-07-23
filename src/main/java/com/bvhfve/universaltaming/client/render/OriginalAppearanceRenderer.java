@@ -30,6 +30,10 @@ public class OriginalAppearanceRenderer<S extends LivingEntityRenderState> exten
     @SuppressWarnings("unchecked")
     public S createRenderState() {
         // Create appropriate render state based on entity type
+        // Handle null case during initialization
+        if (this.originalEntityType == null) {
+            return (S) new LivingEntityRenderState();
+        }
         return (S) createRenderStateForEntityType(this.originalEntityType);
     }
     
@@ -66,6 +70,9 @@ public class OriginalAppearanceRenderer<S extends LivingEntityRenderState> exten
     
     private LivingEntityRenderState createRenderStateForEntityType(String entityType) {
         // Create the appropriate render state for each entity type
+        if (entityType == null) {
+            return new LivingEntityRenderState();
+        }
         return switch (entityType) {
             case "minecraft:cow" -> new net.minecraft.client.render.entity.state.CowEntityRenderState();
             case "minecraft:pig" -> new net.minecraft.client.render.entity.state.PigEntityRenderState();
@@ -76,8 +83,8 @@ public class OriginalAppearanceRenderer<S extends LivingEntityRenderState> exten
             case "minecraft:zombie" -> new net.minecraft.client.render.entity.state.ZombieEntityRenderState();
             case "minecraft:skeleton" -> new net.minecraft.client.render.entity.state.SkeletonEntityRenderState();
             case "minecraft:creeper" -> new net.minecraft.client.render.entity.state.CreeperEntityRenderState();
-            case "minecraft:spider" -> new net.minecraft.client.render.entity.state.SpiderEntityRenderState();
-            case "minecraft:enderman" -> new net.minecraft.client.render.entity.state.EndermanEntityRenderState();
+            case "minecraft:spider" -> new net.minecraft.client.render.entity.state.LivingEntityRenderState();
+            case "minecraft:enderman" -> new net.minecraft.client.render.entity.state.LivingEntityRenderState();
             default -> new LivingEntityRenderState(); // Generic fallback
         };
     }

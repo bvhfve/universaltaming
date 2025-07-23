@@ -1,7 +1,9 @@
 package com.bvhfve.universaltaming;
 
 import com.bvhfve.universaltaming.datagen.DynamicEntityGenerator;
+import com.bvhfve.universaltaming.entity.TamedCreeperEntity;
 import com.bvhfve.universaltaming.entity.TamedGenericEntity;
+import com.bvhfve.universaltaming.item.UniversalTamingItem;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -47,24 +49,35 @@ public class Universaltaming implements ModInitializer {
     public static final EntityType<TamedGenericEntity> TAMED_GENERIC = Registry.register(
         Registries.ENTITY_TYPE,
         Identifier.of(MOD_ID, "tamed_generic"),
-        EntityType.Builder.<TamedGenericEntity>create((entityType, world) -> new TamedGenericEntity(entityType, world), SpawnGroup.CREATURE)
+        EntityType.Builder.create(TamedGenericEntity::new, SpawnGroup.CREATURE)
             .dimensions(0.6f, 1.95f)
             .maxTrackingRange(10)
             .trackingTickInterval(3)
-            .build(net.minecraft.registry.RegistryKey.of(Registries.ENTITY_TYPE.getKey(), Identifier.of(MOD_ID, "tamed_generic")))
+            .build()
     );
 
-    // Universal taming item - will be initialized in onInitialize()
-    public static net.minecraft.item.Item UNIVERSAL_TAMING_ITEM;
+    public static final EntityType<TamedCreeperEntity> TAMED_CREEPER = Registry.register(
+        Registries.ENTITY_TYPE,
+        Identifier.of(MOD_ID, "tamed_creeper"),
+        EntityType.Builder.create(TamedCreeperEntity::new, SpawnGroup.CREATURE)
+            .dimensions(0.6f, 1.7f)
+            .maxTrackingRange(8)
+            .trackingTickInterval(3)
+            .build()
+    );
+
+    // Universal taming item - the key to our perfect preservation system
+    public static final UniversalTamingItem UNIVERSAL_TAMING_ITEM = Registry.register(
+        Registries.ITEM,
+        Identifier.of(MOD_ID, "universal_taming_item"),
+        new UniversalTamingItem()
+    );
 
     @Override
     public void onInitialize() {
         LOGGER.info("=== Universal Taming Mod v{} ===", VERSION);
         LOGGER.info("Initializing Perfect Visual Preservation System");
         LOGGER.info("Core Philosophy: 'A tamed cow must look like a vanilla cow'");
-
-        // Register items first
-        registerItems();
 
         // Register core entity attributes
         registerEntityAttributes();
@@ -79,30 +92,12 @@ public class Universaltaming implements ModInitializer {
         registerServerEvents();
 
         // Log successful initialization
-        int totalEntityTypes = DynamicEntityGenerator.getAllTamedEntityTypes().size() + 1;
+        int totalEntityTypes = DynamicEntityGenerator.getAllTamedEntityTypes().size() + 2;
         LOGGER.info("=== Universal Taming Initialized Successfully ===");
         LOGGER.info("Total entity types with perfect visual preservation: {}", totalEntityTypes);
         LOGGER.info("Phase 1 (COMPLETE): 11 entity types");
         LOGGER.info("Phase 2 (IN PROGRESS): Extended coverage planned");
         LOGGER.info("Ready for seamless taming with authentic appearance!");
-    }
-
-    /**
-     * Register items during initialization
-     */
-    private void registerItems() {
-        LOGGER.debug("Registering Universal Taming items");
-        
-        // Register the universal taming item with proper registry key
-        UNIVERSAL_TAMING_ITEM = Registry.register(
-            Registries.ITEM,
-            net.minecraft.registry.RegistryKey.of(net.minecraft.registry.RegistryKeys.ITEM, Identifier.of(MOD_ID, "universal_taming_item")),
-            new com.bvhfve.universaltaming.item.UniversalTamingItem(new net.minecraft.item.Item.Settings()
-                .maxCount(1)
-                .registryKey(net.minecraft.registry.RegistryKey.of(net.minecraft.registry.RegistryKeys.ITEM, Identifier.of(MOD_ID, "universal_taming_item"))))
-        );
-        
-        LOGGER.debug("Universal Taming Item registered successfully");
     }
 
     /**
@@ -112,7 +107,8 @@ public class Universaltaming implements ModInitializer {
         LOGGER.debug("Registering entity attributes for perfect visual preservation");
         
         // Register core entity attributes
-        FabricDefaultAttributeRegistry.register(TAMED_GENERIC, TamedGenericEntity.createLivingAttributes());
+        FabricDefaultAttributeRegistry.register(TAMED_GENERIC, TamedGenericEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(TAMED_CREEPER, TamedCreeperEntity.createAttributes());
         
         LOGGER.debug("Core entity attributes registered successfully");
     }
@@ -126,7 +122,7 @@ public class Universaltaming implements ModInitializer {
         
         try {
             // Generate dynamic entity types for all supported mobs
-            DynamicEntityGenerator.generateTamedEntityTypes();
+            DynamicEntityGenerator.generateAllTamedEntityTypes();
             
             int generatedTypes = DynamicEntityGenerator.getAllTamedEntityTypes().size();
             LOGGER.info("Dynamic entity generation complete: {} entity types created", generatedTypes);
